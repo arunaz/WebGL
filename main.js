@@ -36,6 +36,7 @@ class GameScene extends Phaser.Scene {
     this.load.image("basket", "/assets/basket.png");
     this.load.image("note", "/assets/note.png");
     this.load.image("coins", "/assets/coins.png");
+    this.load.image("danger", "/assets/danger.png");
     this.load.image("home", "/assets/home.png");
     this.load.image("bag", "/assets/bag.png");
     this.load.audio("coin", "/assets/coin.mp3");
@@ -113,7 +114,7 @@ class GameScene extends Phaser.Scene {
   }
 
   getRandomTargetType() {
-    const targets = ["coins", "home", "bag"];
+    const targets = ["coins", "home", "bag", "danger"];
     return targets[Math.floor(Math.random() * targets.length)];
   }
 
@@ -155,6 +156,9 @@ class GameScene extends Phaser.Scene {
         break;
       case 'bag':
         this.points +=150;
+        break;
+      case 'danger':
+        this.points -=150;
         break;
       default:
         // this.points +=100;
