@@ -53,16 +53,15 @@ class GameScene extends Phaser.Scene {
     // this.bgMusic.play();
     // this.bgMusic.stop();
     this.background = this.add.tileSprite(0, 0, config.width, config.height, "bg");
- 
     this.background.setOrigin(0, 0);
-    // this.add.image(0,0,"bg").setOrigin(0,0);
-    this.player = this.physics.add.image(0,sizes.height - 100,"basket").setOrigin(0,0);
+    
+    this.player = this.physics.add.image(sizes.width/2 ,sizes.height - 100,"basket").setOrigin(0,0);
     this.player.setImmovable(true);
     this.player.body.allowGravity = false;
     this.player.setCollideWorldBounds(true);
-    this.player.setSize(80, 15).setOffset(10, 70);
-    this.player.setSize(this.player.width - this.player.width/4, this.player.height/6)
-                .setOffset(this.player.width/10, this.player.height - this.player.height/10);
+    // this.player.setSize(80, 15).setOffset(10, 70);
+    // this.player.setSize(this.player.width - this.player.width/4, this.player.height/6)
+    //             .setOffset(this.player.width/10, this.player.height - this.player.height/10);
 
     this.target = this.physics.add.image(0,0,this.getRandomTargetType()).setOrigin(0,0);
     this.target.setMaxVelocity(0, speedDown);
@@ -71,7 +70,7 @@ class GameScene extends Phaser.Scene {
 
     this.cursor = this.input.keyboard.createCursorKeys();
 
-    this.textScore = this.add.text(sizes.width - 120, 10, "Tax Benefits: 0", {
+    this.textScore = this.add.text(sizes.width - 200, 10, "Tax Benefits: 0", {
       font: "25px Arial",
       fill: "#ffffff"
     });
@@ -97,9 +96,9 @@ class GameScene extends Phaser.Scene {
     this.textTime.setText(`Remaining Time: ${Math.round(this.remainingTime).toString()}`);
 
     if(this.target.y >= sizes.height) {
+      this.target.setX(this.getRandomX());
       this.target.setTexture(this.getRandomTargetType());
       this.target.setY(0);
-      this.target.setX(this.getRandomX());
     }
 
     const { left, right } = this.cursor;
@@ -119,7 +118,7 @@ class GameScene extends Phaser.Scene {
   }
 
   getRandomX() {
-    return Phaser.Math.Between(0, config.width)
+    return Phaser.Math.Between(0, config.width);
     // return Math.floor(Math.random() * sizes.width - 100);
   }
 
@@ -129,8 +128,7 @@ class GameScene extends Phaser.Scene {
     // this.target.setTexture(this.getRandomTargetType());
     this.target.setY(0);
     this.target.setX(this.getRandomX());
-    this.points++;
-    this.textScore.setText(`Score: ${this.points}`);
+    this.updateScore();
   }
 
   gameOver() {
@@ -144,8 +142,25 @@ class GameScene extends Phaser.Scene {
       gameEndScoreSpan.textContent = this.points;
       gameWinLoseSpan.textContent = "Lose!";
     }
-    
-    
+  }
+
+  updateScore() {
+    const key = this.target?.texture?.key;
+    switch (key) {
+      case 'coins':
+        this.points +=100;
+        break;
+      case 'home':
+        this.points +=50;
+        break;
+      case 'bag':
+        this.points +=150;
+        break;
+      default:
+        // this.points +=100;
+        break;
+    }
+    this.textScore.setText(`Score: ${this.points}`);
   }
 
 }
